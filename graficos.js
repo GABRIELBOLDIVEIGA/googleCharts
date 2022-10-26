@@ -1,5 +1,7 @@
-function desenhaPizza() {
+function desenharGraficos() {
+  // Grafico de Pizza
   var tabela = new google.visualization.DataTable();
+
   tabela.addColumn("string", "categorias");
   tabela.addColumn("number", "valores");
   tabela.addRows([
@@ -31,9 +33,9 @@ function desenhaPizza() {
 
   var grafico = new google.visualization.PieChart(document.getElementById("graficoPizza"));
   grafico.draw(tabela, opcoes);
-}
+  // ********************************************************************************************
 
-function desenhaLinha() {
+  //Grafico de Linha
   var tabela = new google.visualization.DataTable();
 
   tabela.addColumn("string", "Mês");
@@ -56,7 +58,7 @@ function desenhaLinha() {
   var options = {
     title: "Gastos por mês",
     width: 800,
-    height: 300,
+    height: 400,
     vAxis: {
       format: "currency",
       gridlines: {
@@ -70,9 +72,9 @@ function desenhaLinha() {
 
   var graficoLinha = new google.visualization.LineChart(document.getElementById("graficoLinha"));
   graficoLinha.draw(tabela, options);
-}
+  // ********************************************************************************************
 
-function desenhaColuna() {
+  //Grafico de Colunas
   var tabela = google.visualization.arrayToDataTable([
     ["Mês", "Entrada", "Saída"],
     ["jan", 2500, 1000],
@@ -91,8 +93,6 @@ function desenhaColuna() {
 
   var opcoes = {
     title: "Entradas e Saidas",
-    width: 800,
-    heigth: 400,
     vAxis: {
       title: "valores",
       format: "currency",
@@ -104,6 +104,8 @@ function desenhaColuna() {
     legend: {
       position: "bottom",
     },
+    width: 800,
+    height: 400,
   };
 
   var view = new google.visualization.DataView(tabela);
@@ -111,4 +113,72 @@ function desenhaColuna() {
   var grafico = new google.visualization.ColumnChart(document.getElementById("graficoColuna"));
 
   grafico.draw(view, opcoes);
+  // ********************************************************************************************
+
+  //Grafico de Barras
+
+  var dadosJson = $.ajax({
+    url: 'https://gist.githubusercontent.com/GABRIELBOLDIVEIGA/9af455de652bca87db32ab19165dd8cf/raw/7e357fafbad9ec66b0d4ce00e9f200b0ad0af2e0/dados.json',
+    dataType: "json", 
+    async: false,
+  }).responseText;
+
+  tabela.sort([{ column: 1, desc: true }]);
+
+  var tabela = new google.visualization.DataTable(dadosJson);
+ 
+  var opcoes = {
+    title: 'Tipos de Gastos',
+    height: 400,
+    width: 800,
+    vAxis: { 
+            gridlines: {
+                    count:0, color:'transparent'
+            }},
+    legend: 'none',
+    hAxis: { 
+            gridlines: 
+                {
+                    color:'transparent'
+                },
+            format:'currency',
+            textPosition:'none'
+            },
+    annotations: 
+        {
+        alwaysOutside:true
+        }
+
+};
+
+  // var grafico = new google.visualization.ColumnChart(document.getElementById("graficoColunaSurpresa"));
+  var grafico = new google.visualization.BarChart(document.getElementById("graficoBarras"));
+  grafico.draw(tabela, opcoes);
+
+  // grafico de barras com arquivo json
+  var dadosJson = $.ajax({
+    // url: 'dados.json',
+    url: "https://gist.githubusercontent.com/GABRIELBOLDIVEIGA/3fe27dbef59a7f0fab416262b180df9b/raw/4afe752f7aacf60da1e3657d6a2fc591eb368452/dados.json",
+    dataType: "json", 
+    async: false,
+  }).responseText;
+
+  var tabela = new google.visualization.DataTable(dadosJson);
+
+  tabela.sort([{ column: 1, desc: true }]);
+
+  var opcoes = {
+    title: "Usuários e Poupanças",
+    width: 800,
+    height: 400,
+    legend: "none",
+    hAxis: {
+      gridlines: { color: "transparent" },
+      textPosition: "none",
+    },
+    annotations: { alwaysOutside: true },
+  };
+
+  var grafico = new google.visualization.BarChart(document.getElementById("graficoBarrasJson"));
+  grafico.draw(tabela, opcoes);
 }
